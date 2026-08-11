@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fiyen — Validation du cahier des charges</title>
+<meta name="description" content="Formulaire de validation des fonctionnalités de la plateforme Fiyen Delivery.">
+
+<!--
+  ============================================================================
+  ENVOI DES RÉPONSES
+  ----------------------------------------------------------------------------
+  Le formulaire passe par FormSubmit (aucune inscription requise).
+  À la PREMIÈRE soumission, FormSubmit envoie un e-mail de confirmation :
+  il faut cliquer le lien qu'il contient, sinon les réponses suivantes
+  n'arriveront pas.
+
+  ⚠ IMPORTANT — l'adresse ci-dessous sera VISIBLE dans le code source de la
+  page une fois publiée sur GitHub, donc récupérable par les robots à spam.
+  Pour l'éviter : après la première soumission, FormSubmit fournit une URL
+  masquée de la forme https://formsubmit.co/el/xxxxxx — remplacez simplement
+  la valeur de `action` par celle-ci et l'adresse disparaît de la page.
+  ============================================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --vert:#16332A; --vert-2:#1E4235; --vert-3:#2C5646; --vert-nuit:#0E1F19;
+    --creme:#F5EFE1; --creme-2:#EAE0C6;
+    --or:#E0A526; --or-halo:rgba(224,165,38,.4); --or-halo-doux:rgba(224,165,38,.16);
+    --rust:#D9581F;
+    --tx-sombre:#F5EFE1; --tx-sombre-muet:#A9BDB0;
+    --tx-clair:#16332A; --tx-clair-muet:#55605A;
+    --succes:#3B6349; --succes-fond:rgba(107,143,94,.18);
+    --r-sm:14px; --r-md:18px; --r-lg:24px;
+    --courbe:cubic-bezier(.16,1,.3,1);
+    --titre:'Baloo 2',system-ui,sans-serif;
+    --corps:'Work Sans',system-ui,sans-serif;
+    --mono:'Space Mono',ui-monospace,monospace;
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    margin:0; background:var(--creme); color:var(--tx-clair);
+    font-family:var(--corps); font-size:16px; line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .page{ max-width:760px; margin:0 auto; padding:24px 18px 80px; }
+
+  /* ------------------------------- En-tête ------------------------------- */
+
+  .heros{
+    position:relative; overflow:hidden; border-radius:var(--r-lg);
+    padding:36px 28px; margin-bottom:28px; color:var(--tx-sombre);
+    background:radial-gradient(65% 85% at 85% 8%, var(--or-halo) 0%, rgba(224,165,38,0) 55%), var(--vert);
+    box-shadow:0 10px 34px rgba(22,51,42,.18);
+  }
+  .heros::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(115deg, transparent 42%, rgba(255,244,222,.16) 50%, transparent 58%);
+  }
+  .heros > *{ position:relative; z-index:1; }
+  .marque{ font-family:var(--titre); font-weight:800; font-size:26px; letter-spacing:.02em; color:var(--or); }
+  .marque-sous{ font-family:var(--mono); font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:var(--tx-sombre-muet); margin-top:4px; }
+  .heros h1{ font-family:var(--titre); font-weight:800; font-size:clamp(26px,5vw,36px); line-height:1.1; margin:22px 0 0; }
+  .heros p{ margin:12px 0 0; color:var(--tx-sombre-muet); font-size:15px; max-width:52ch; }
+
+  /* ------------------------------- Sections ------------------------------ */
+
+  .bloc{
+    background:#FFFDF7; border:1px solid var(--creme-2); border-radius:var(--r-lg);
+    padding:26px 22px; margin-bottom:18px;
+  }
+  .bloc > legend, .bloc-titre{
+    font-family:var(--titre); font-weight:700; font-size:20px; margin:0 0 6px; padding:0;
+    color:var(--tx-clair);
+  }
+  .bloc-intro{ color:var(--tx-clair-muet); font-size:14.5px; margin:0 0 20px; }
+  fieldset.bloc{ border:1px solid var(--creme-2); }
+
+  .etiquette-section{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--tx-clair-muet); display:block; margin-bottom:8px;
+  }
+
+  /* ------------------------------ Cases à cocher -------------------------- */
+
+  .option{
+    display:flex; gap:14px; align-items:flex-start;
+    padding:14px 16px; border:1.5px solid var(--creme-2); border-radius:var(--r-sm);
+    margin-bottom:10px; cursor:pointer;
+    transition:border-color 160ms var(--courbe), background 160ms var(--courbe);
+  }
+  .option:hover{ border-color:var(--or); background:var(--or-halo-doux); }
+  .option:has(input:checked){ border-color:var(--or); background:var(--or-halo-doux); }
+  .option:has(input:focus-visible){ outline:3px solid var(--vert); outline-offset:2px; }
+
+  .option input{
+    appearance:none; -webkit-appearance:none;
+    width:22px; height:22px; margin:2px 0 0; flex-shrink:0;
+    border:2px solid var(--vert-3); border-radius:7px; background:#fff;
+    cursor:pointer; position:relative;
+    transition:background 160ms var(--courbe), border-color 160ms var(--courbe);
+  }
+  .option input:checked{ background:var(--or); border-color:var(--or); }
+  /* La coche est dessinée en CSS : pas d'image, pas d'emoji. */
+  .option input:checked::after{
+    content:""; position:absolute; left:6px; top:2px;
+    width:5px; height:10px; border:solid var(--vert); border-width:0 2.5px 2.5px 0;
+    transform:rotate(45deg);
+  }
+  .option input[type="radio"]{ border-radius:50%; }
+  .option input[type="radio"]:checked::after{
+    left:4px; top:4px; width:10px; height:10px; border:none;
+    border-radius:50%; background:var(--vert); transform:none;
+  }
+
+  .option .txt{ flex:1; }
+  .option .titre{ font-weight:600; font-size:15.5px; display:block; }
+  .option .desc{ color:var(--tx-clair-muet); font-size:13.5px; margin-top:3px; display:block; }
+
+  .etiq{
+    display:inline-block; font-family:var(--mono); font-size:10px; letter-spacing:.06em;
+    text-transform:uppercase; padding:3px 9px; border-radius:999px; margin-left:8px;
+    vertical-align:2px;
+  }
+  .etiq.fait{ background:var(--succes-fond); color:var(--succes); }
+  .etiq.nouveau{ background:var(--or); color:var(--vert); }
+  .etiq.question{ background:rgba(217,88,31,.14); color:#A53F13; }
+
+  /* -------------------------------- Champs ------------------------------- */
+
+  label.champ{ display:block; font-family:var(--mono); font-size:11px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--tx-clair-muet); margin:0 0 7px; }
+
+  input[type=text], input[type=email], input[type=tel], textarea{
+    font:inherit; font-family:var(--corps); width:100%;
+    padding:13px 15px; border:1.5px solid var(--creme-2); border-radius:var(--r-sm);
+    background:#fff; color:var(--tx-clair);
+    transition:border-color 160ms var(--courbe), box-shadow 160ms var(--courbe);
+  }
+  input:focus, textarea:focus{
+    outline:none; border-color:var(--or); box-shadow:0 0 0 4px var(--or-halo-doux);
+  }
+  textarea{ min-height:120px; resize:vertical; line-height:1.6; }
+  .duo{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .champ-bloc{ margin-bottom:16px; }
+
+  /* ------------------------------- Compteur ------------------------------ */
+
+  .compteur{
+    position:sticky; top:0; z-index:10;
+    background:var(--vert); color:var(--tx-sombre);
+    border-radius:0 0 var(--r-md) var(--r-md);
+    padding:12px 20px; margin:0 -18px 18px;
+    display:flex; justify-content:space-between; align-items:center; gap:12px;
+    font-family:var(--mono); font-size:12px; letter-spacing:.04em;
+    box-shadow:0 6px 20px rgba(22,51,42,.16);
+  }
+  .compteur strong{ font-family:var(--titre); font-size:18px; color:var(--or); }
+
+  /* ------------------------------- Bouton -------------------------------- */
+
+  .envoyer{
+    position:relative; overflow:hidden; width:100%;
+    font-family:var(--titre); font-weight:700; font-size:17px;
+    min-height:58px; padding:16px 28px; border:none; border-radius:var(--r-sm);
+    background:var(--or); color:var(--vert); cursor:pointer;
+    box-shadow:0 0 26px 3px var(--or-halo);
+    transition:transform 160ms var(--courbe), filter 160ms var(--courbe);
+  }
+  .envoyer::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(115deg, transparent 30%, rgba(255,255,255,.35) 48%, transparent 66%);
+  }
+  .envoyer:hover{ filter:brightness(1.06); }
+  .envoyer:active{ transform:scale(.985); }
+  .envoyer:focus-visible{ outline:3px solid var(--vert); outline-offset:3px; }
+
+  .note-finale{ text-align:center; color:var(--tx-clair-muet); font-size:13px; margin-top:14px; }
+
+  footer{ text-align:center; margin-top:32px; }
+  footer p{ font-family:var(--mono); font-size:11px; letter-spacing:.08em; color:var(--tx-clair-muet); }
+
+  @media (max-width:560px){
+    .duo{ grid-template-columns:1fr; }
+    .heros{ padding:28px 20px; }
+    .bloc{ padding:22px 16px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition-duration:.01ms !important; animation-duration:.01ms !important; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="heros">
+    <div class="marque">Fiyen</div>
+    <div class="marque-sous">Delivery</div>
+    <h1>Validons ensemble ce qui sera construit</h1>
+    <p>
+      Voici tout ce que nous avons compris de votre besoin. Cochez ce qui vous convient,
+      décochez ce qui ne vous sert pas, et ajoutez ce qui manque. Comptez 5 minutes.
+    </p>
+  </header>
+
+  <div class="compteur">
+    <span>Fonctionnalités retenues</span>
+    <span><strong id="nb">0</strong> / <span id="total">0</span></span>
+  </div>
+
+  <form action="https://formsubmit.co/tienddaren4@gmail.com" method="POST">
+
+    <!-- Réglages FormSubmit -->
+    <input type="hidden" name="_subject" value="Fiyen — retour du client sur le cahier des charges">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_captcha" value="false">
+    <!-- Piège à robots : un humain ne remplit jamais ce champ, il reste vide. -->
+    <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+
+    <!-- ================= 1. Déjà construit ================= -->
+    <fieldset class="bloc">
+      <legend class="bloc-titre">1. Ce qui est déjà construit</legend>
+      <p class="bloc-intro">
+        Ces fonctionnalités existent et tournent aujourd'hui. Confirmez qu'elles
+        correspondent bien à votre besoin — sinon, dites-le à la fin.
+      </p>
+
+      <label class="option">
+        <input type="checkbox" name="Existant — Comptes par rôle" value="Validé" checked>
+        <span class="txt">
+          <span class="titre">Comptes séparés<span class="etiq fait">déjà fait</span></span>
+          <span class="desc">Un accès distinct pour la compagnie, les livreurs et les destinataires, chacun ne voyant que ce qui le concerne.</span>
+        </span>
+      </label>
+
+      <label class="option">
+        <input type="checkbox" name="Existant — Gestion des courses" value="Validé" checked>
+        <span class="txt">
+          <span class="titre">Création et suivi des courses<span class="etiq fait">déjà fait</span></span>
+          <span class="desc">Création d'une course, attribution à un livreur, et suivi du statut : en attente → assignée → récupérée → en route → livrée.</span>
+        </span>
+      </label>
+
+      <label class="option">
+        <input type="checkbox" name="Existant — Suivi GPS temps réel" value="Validé" checked>
+        <span class="txt">
+          <span class="titre">Suivi GPS en temps réel<span class="etiq fait">déjà fait</span></span>
+          <span class="desc">La position des livreurs s'affiche en direct sur une carte, côté compagnie comme côté destinataire.</span>
+        </span>
+      </label>
+
+      <label class="option">
+        <input type="checkbox" name="Existant — Masquage des numéros" value="Validé" checked>
+        <span class="txt">
+          <span class="titre">Numéros de téléphone masqués<span class="etiq fait">déjà fait</span></span>
+          <span class="desc">Le destinataire et le livreur discutent par messagerie sans jamais échanger leurs numéros. Le canal se ferme à la fin de la course.</span>
+        </span>
+      </label>
+
+      <label class="option">
+        <input type="checkbox" name="Existant — Tableau de bord" value="Validé" checked>
+        <span class="txt">
+          <span class="titre">Tableau de bord compagnie<span class="etiq fait">déjà fait</span></span>
+          <span class="desc">Vue d'ensemble des courses et de la flotte, carte des livreurs en activité, gestion des livreurs.</span>
+        </span>
+      </label>
+    </fieldset>
+
+    <!-- ================= 2. Nouveau ================= -->
+    <fieldset class="bloc">
+      <legend class="bloc-titre">2. Ce que vous nous avez demandé</legend>
+      <p class="bloc-intro">
+        Notre compréhension de votre demande. Cochez ce que vous confirmez.
+      </p>
+
+      <label class="option">
+        <input type="checkbox" name="Nouveau — Portail partenaires" value="Validé" checked>
+        <span class="txt">
+          <span class="titre">Vos partenaires commandent eux-mêmes<span class="etiq nouveau">nouveau</span></span>
+          <span class="desc">Chaque entreprise partenaire dispose d'un accès pour lancer ses commandes en ligne, sans avoir à vous téléphoner.</span>
+        </span>
+      </label>
+
+      <label class="option">
+        <input type="checkbox" name="Nouveau — Comptes collaborateurs" value="Validé" checked>
+        <span class="txt">
+          <span class="titre">Comptes collaborateurs<span class="etiq nouveau">nouveau</span></span>
+          <span class="desc">Un partenaire peut créer des accès pour ses employés, qui commandent en son nom.</span>
+        </span>
+      </label>
+
+      <label class="option">
+        <input type="checkbox" name="Nouveau — Reçu par livraison" value="Validé" checked>
+        <span class="txt">
+          <span class="titre">Un reçu détaillé par livraison<span class="etiq nouveau">nouveau</span></span>
+          <span class="desc">Numéro, expéditeur, destinataire, adresses, horaires de chaque étape, livreur — imprimable.</span>
+        </span>
+      </label>
+
+      <label class="option">
+        <input type="checkbox" name="Nouveau — Récapitulatifs mensuels" value="Validé" checked>
+        <span class="txt">
+          <span class="titre">Récapitulatifs de fin de mois<span class="etiq nouveau">nouveau</span></span>
+          <span class="desc">Toutes les livraisons d'une période, filtrables par partenaire, avec export tableur.</span>
+        </span>
+      </label>
+
+      <label class="option">
+        <input type="checkbox" name="Nouveau — Facturation" value="Validé" checked>
+        <span class="txt">
+          <span class="titre">Factures aux partenaires<span class="etiq nouveau">nouveau</span></span>
+          <span class="desc">Génération d'une facture mensuelle par partenaire, à partir des livraisons réellement effectuées.</span>
+        </span>
+      </label>
+
+      <label class="option">
+        <input type="checkbox" name="Nouveau — Historique complet" value="Validé" checked>
+        <span class="txt">
+          <span class="titre">Historique et traçabilité<span class="etiq nouveau">nouveau</span></span>
+          <span class="desc">Conservation du trajet parcouru et de l'heure de chaque étape, pour pouvoir trancher en cas de contestation.</span>
+        </span>
+      </label>
+
+      <label class="option">
+        <input type="checkbox" name="Nouveau — Notifications" value="Validé" checked>
+        <span class="txt">
+          <span class="titre">Notifications automatiques<span class="etiq nouveau">nouveau</span></span>
+          <span class="desc">Le livreur est prévenu d'une nouvelle course, le partenaire est prévenu quand sa livraison avance. Sans cela, on continue de s'appeler.</span>
+        </span>
+      </label>
+
+      <label class="option">
+        <input type="checkbox" name="Nouveau — Version anglaise" value="Validé" checked>
+        <span class="txt">
+          <span class="titre">Application en anglais<span class="etiq nouveau">nouveau</span></span>
+          <span class="desc">Toute l'interface disponible en français et en anglais, au choix de chaque utilisateur.</span>
+        </span>
+      </label>
+    </fieldset>
+
+    <!-- ================= 3. Questions ================= -->
+    <fieldset class="bloc">
+      <legend class="bloc-titre">3. Trois points à préciser</legend>
+      <p class="bloc-intro">
+        Nous n'avons pas bien saisi ces trois éléments. Vos réponses éviteront de
+        construire à côté.
+      </p>
+
+      <span class="etiquette-section">Question 1 — visibilité des collaborateurs</span>
+      <label class="option">
+        <input type="radio" name="Q1 — Visibilité collaborateur" value="Chacun voit uniquement ses propres livraisons" checked>
+        <span class="txt"><span class="titre">Chacun voit uniquement ses propres livraisons</span></span>
+      </label>
+      <label class="option">
+        <input type="radio" name="Q1 — Visibilité collaborateur" value="Chacun voit toutes les livraisons de son entreprise">
+        <span class="txt"><span class="titre">Chacun voit toutes les livraisons de son entreprise</span></span>
+      </label>
+
+      <span class="etiquette-section" style="margin-top:22px">Question 2 — transporteur partenaire</span>
+      <p class="bloc-intro" style="margin-bottom:10px">
+        Vous avez évoqué l'envoi de commandes à un service de transport partenaire.
+        S'agit-il bien de confier certaines courses à une autre société ?
+      </p>
+      <label class="option">
+        <input type="radio" name="Q2 — Sous-traitance transporteur" value="Oui, je sous-traite certaines courses à un transporteur partenaire">
+        <span class="txt"><span class="titre">Oui, je confie certaines courses à un transporteur partenaire</span></span>
+      </label>
+      <label class="option">
+        <input type="radio" name="Q2 — Sous-traitance transporteur" value="Non, il s'agissait d'autre chose (précisé plus bas)">
+        <span class="txt"><span class="titre">Non, je voulais dire autre chose</span><span class="desc">Précisez-le dans le champ libre en fin de formulaire.</span></span>
+      </label>
+
+      <span class="etiquette-section" style="margin-top:22px">Question 3 — documents papier</span>
+      <p class="bloc-intro" style="margin-bottom:10px">
+        Quels documents papier souhaitez-vous supprimer ? Plusieurs réponses possibles.
+      </p>
+      <label class="option">
+        <input type="checkbox" name="Q3 — Papier : bons de livraison signés" value="Oui">
+        <span class="txt"><span class="titre">Les bons de livraison signés à la remise du colis</span><span class="desc">Remplacés par une signature ou une photo prise par le livreur.</span></span>
+      </label>
+      <label class="option">
+        <input type="checkbox" name="Q3 — Papier : cahier de commandes" value="Oui">
+        <span class="txt"><span class="titre">Le cahier où sont notées les commandes reçues par téléphone</span></span>
+      </label>
+      <label class="option">
+        <input type="checkbox" name="Q3 — Papier : factures papier" value="Oui">
+        <span class="txt"><span class="titre">Les factures établies à la main</span></span>
+      </label>
+    </fieldset>
+
+    <!-- ================= 4. Tarification ================= -->
+    <fieldset class="bloc">
+      <legend class="bloc-titre">4. Comment facturez-vous vos partenaires ?</legend>
+      <p class="bloc-intro">
+        Cela détermine la façon dont les factures seront calculées.
+      </p>
+
+      <label class="option">
+        <input type="radio" name="Mode de facturation" value="Prix fixe par course" checked>
+        <span class="txt"><span class="titre">Un prix fixe par course</span></span>
+      </label>
+      <label class="option">
+        <input type="radio" name="Mode de facturation" value="Prix selon la distance">
+        <span class="txt"><span class="titre">Un prix qui dépend de la distance</span></span>
+      </label>
+      <label class="option">
+        <input type="radio" name="Mode de facturation" value="Abonnement mensuel">
+        <span class="txt"><span class="titre">Un abonnement mensuel</span></span>
+      </label>
+      <label class="option">
+        <input type="radio" name="Mode de facturation" value="Autre (précisé plus bas)">
+        <span class="txt"><span class="titre">Autre</span><span class="desc">Précisez dans le champ libre ci-dessous.</span></span>
+      </label>
+    </fieldset>
+
+    <!-- ================= 5. Ajouts ================= -->
+    <fieldset class="bloc">
+      <legend class="bloc-titre">5. Ce que nous avons oublié</legend>
+      <p class="bloc-intro">
+        Le champ le plus important du formulaire. Décrivez avec vos mots ce qui
+        manque, ce qui vous gêne aujourd'hui, ou ce que vous feriez différemment.
+      </p>
+
+      <div class="champ-bloc">
+        <label class="champ" for="ajouts">Fonctionnalités à ajouter</label>
+        <textarea id="ajouts" name="Fonctionnalités à ajouter" placeholder="Par exemple : « je veux pouvoir bloquer un partenaire qui n'a pas payé », « il me faut un mode hors ligne quand le réseau coupe »…"></textarea>
+      </div>
+
+      <div class="champ-bloc">
+        <label class="champ" for="priorites">Vos 3 priorités, dans l'ordre</label>
+        <textarea id="priorites" name="Trois priorités" style="min-height:90px" placeholder="1.&#10;2.&#10;3."></textarea>
+      </div>
+
+      <div class="champ-bloc">
+        <label class="champ" for="remarques">Remarques libres</label>
+        <textarea id="remarques" name="Remarques" style="min-height:90px" placeholder="Tout ce qui ne rentre pas ailleurs."></textarea>
+      </div>
+    </fieldset>
+
+    <!-- ================= 6. Coordonnées ================= -->
+    <fieldset class="bloc">
+      <legend class="bloc-titre">6. Vos coordonnées</legend>
+      <p class="bloc-intro">Pour pouvoir revenir vers vous.</p>
+
+      <div class="duo champ-bloc">
+        <div>
+          <label class="champ" for="nom">Votre nom</label>
+          <input type="text" id="nom" name="Nom" required autocomplete="name">
+        </div>
+        <div>
+          <label class="champ" for="societe">Votre société</label>
+          <input type="text" id="societe" name="Société" autocomplete="organization">
+        </div>
+      </div>
+
+      <div class="duo">
+        <div>
+          <label class="champ" for="tel">Téléphone</label>
+          <input type="tel" id="tel" name="Téléphone" placeholder="+226 70 00 00 00" autocomplete="tel">
+        </div>
+        <div>
+          <label class="champ" for="mail">E-mail</label>
+          <input type="email" id="mail" name="E-mail" autocomplete="email">
+        </div>
+      </div>
+    </fieldset>
+
+    <button type="submit" class="envoyer">Envoyer mes réponses</button>
+    <p class="note-finale">Vos réponses nous parviennent directement. Aucune inscription n'est nécessaire.</p>
+  </form>
+
+  <footer>
+    <p>Fiyen Delivery — Ouagadougou, Burkina Faso</p>
+  </footer>
+
+</div>
+
+<script>
+  // Compteur de fonctionnalités retenues. Ne porte que sur les sections 1 et 2 :
+  // les questions à choix des sections 3 et 4 ne sont pas des fonctionnalités.
+  (function () {
+    var cases = Array.prototype.slice.call(
+      document.querySelectorAll('input[type=checkbox][name^="Existant"], input[type=checkbox][name^="Nouveau"]')
+    );
+    var nb = document.getElementById('nb');
+    var total = document.getElementById('total');
+    total.textContent = cases.length;
+
+    function majuscule() {
+      nb.textContent = cases.filter(function (c) { return c.checked; }).length;
+    }
+    cases.forEach(function (c) { c.addEventListener('change', majuscule); });
+    majuscule();
+  })();
+</script>
+
+</body>
+</html>
